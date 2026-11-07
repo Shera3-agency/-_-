@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطة تعديلات متجر هلا تكس | العرض التفاعلي للعميل</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Cairo & Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#D4AF37',
+                            goldHover: '#B8962E',
+                            dark: '#111827',
+                            card: '#1F2937',
+                            accent: '#3B82F6',
+                            emerald: '#10B981',
+                            warmBg: '#F9FAFB'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #0B0F17; color: #F3F4F6; }
+        .glass-panel { background: rgba(31, 41, 55, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .active-nav { background: #D4AF37; color: #111827 !important; font-weight: 700; shadow: 0 4px 14px rgba(212, 175, 55, 0.4); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #111827; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+        
+        /* Mobile Simulator Screen Frame */
+        .phone-frame {
+            border: 12px solid #1f2937;
+            border-radius: 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
+        }
+        .pulse-gold { animation: pulseGlow 3s infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scrollbar overflow-x-hidden">
+
+    <!-- TOP GLOBAL NAVIGATION BAR (فصول PDF) -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-gray-800 px-4 py-2">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+            <!-- Brand Logo / Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-slate-900 font-extrabold text-xl shadow-lg">
+                    هـ
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white flex items-center gap-2">
+                        هلا تكس <span class="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">متطلبات التعديل</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">تجهيز المتجر قبل إطلاق الحملات الإعلانية</p>
+                </div>
+            </div>
+
+            <!-- Chapter Navigation Tabs -->
+            <nav class="flex items-center gap-1 overflow-x-auto max-w-full py-1 custom-scrollbar">
+                <button onclick="switchTab('intro')" id="tab-intro" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800 active-nav">
+                    <i class="fa-solid fa-bullseye ml-1"></i> 1. الهدف
+                </button>
+                <button onclick="switchTab('hero')" id="tab-hero" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800">
+                    <i class="fa-solid fa-image ml-1"></i> 2. البانر الرئيسي
+                </button>
+                <button onclick="switchTab('categories')" id="tab-categories" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800">
+                    <i class="fa-solid fa-layer-group ml-1"></i> 3. الأقسام والباقات
+                </button>
+                <button onclick="switchTab('offers')" id="tab-offers" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800">
+                    <i class="fa-solid fa-tags ml-1"></i> 4. العروض الـ 4
+                </button>
+                <button onclick="switchTab('product-page')" id="tab-product-page" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800">
+                    <i class="fa-solid fa-shirt ml-1"></i> 5. قالب المنتجات
+                </button>
+                <button onclick="switchTab('trust')" id="tab-trust" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800">
+                    <i class="fa-solid fa-shield-halved ml-1"></i> 6. عناصر الثقة
+                </button>
+                <button onclick="switchTab('layout')" id="tab-layout" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all text-gray-300 hover:bg-gray-800">
+                    <i class="fa-solid fa-list-check ml-1"></i> 7. الترتيب والأولويات
+                </button>
+            </nav>
+
+            <!-- Mode Switcher (Interactive Demo vs Code/Edit Mode) -->
+            <div class="flex items-center bg-gray-900 p-1 rounded-xl border border-gray-700">
+                <button id="view-presentation-btn" onclick="setMode('presentation')" class="px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow">
+                    <i class="fa-solid fa-desktop"></i> عرض العميل
+                </button>
+                <button id="view-editor-btn" onclick="setMode('editor')" class="px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-code"></i> المحرر والأكواد
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- LEFT/CENTER CONTENT PANEL (Slides & Interactive Content) -->
+        <section id="content-container" class="lg:col-span-8 space-y-6">
+
+            <!-- SECTION 1: INTRO & GOALS -->
+            <div id="section-intro" class="tab-content space-y-6">
+                <div class="glass-panel p-6 rounded-2xl border-l-4 border-amber-500">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">01</span>
+                            الهدف الأساسي من التعديلات قبل الإعلانات
+                        </h2>
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">جاهزية الإعلانات</span>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        الإعلانات ستجلب الزيارات، لكن المتجر هو الذي سيشرح المنتج، يزيل الحيرة، يثبت الجودة، ويجعل قرار الشراء سهلاً وسريعاً خلال ثوانٍ معدودة.
+                    </p>
+
+                    <!-- Core Goals Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-800/60 p-4 rounded-xl border border-gray-700/50 hover:border-amber-500/50 transition-all">
+                            <div class="text-amber-400 font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-question-circle"></i> ماذا تبيع هلا تكس؟</div>
+                            <p class="text-xs text-gray-400">توضيح الهوية البصرية ورسالة القيمة الفاخرة فور دخول العميل.</p>
+                        </div>
+                        <div class="bg-gray-800/60 p-4 rounded-xl border border-gray-700/50 hover:border-amber-500/50 transition-all">
+                            <div class="text-amber-400 font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-code-compare"></i> ما الفرق بين الخامات؟</div>
+                            <p class="text-xs text-gray-400">إزالة الحيرة من خلال جداول مقارنة وفيديوهات واضحة.</p>
+                        </div>
+                        <div class="bg-gray-800/60 p-4 rounded-xl border border-gray-700/50 hover:border-amber-500/50 transition-all">
+                            <div class="text-amber-400 font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-box-open"></i> كم قطعة يحتاج العميل؟</div>
+                            <p class="text-xs text-gray-400">باقات مدروسة ترفع متوسط قيمة الطلب (AOV) وتسهل الشراء.</p>
+                        </div>
+                        <div class="bg-gray-800/60 p-4 rounded-xl border border-gray-700/50 hover:border-amber-500/50 transition-all">
+                            <div class="text-amber-400 font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-shield-heart"></i> لماذا الشراء من هلا تكس؟</div>
+                            <p class="text-xs text-gray-400">إبراز الخبرة +20 سنة وسياسات الشحن والضمان الذهبي.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Impact Chart -->
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-amber-400"></i> التأثير المتوقع لتطبيق التعديلات على معدل التحويل (CR)
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-4">مقارنة أداء المتجر قبل التعديل وبعد إعادة الهيكلة</p>
+                    <div class="h-64 w-full">
+                        <canvas id="conversionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: HERO BANNER -->
+            <div id="section-hero" class="tab-content space-y-6 hidden">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">02</span>
+                        البانر الرئيسي للصفحة الرئيسية (Hero Banner)
+                    </h2>
+                    
+                    <!-- Live Banner Simulation -->
+                    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 via-slate-800 to-gray-900 border border-amber-500/30 p-8 shadow-2xl my-6">
+                        <div class="absolute top-0 left-0 w-full h-full opacity-20 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        
+                        <div class="relative z-10 max-w-lg space-y-4">
+                            <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-xs font-semibold">
+                                هلا تكس - خامات فاخرة
+                            </span>
+                            <h3 id="hero-heading-preview" class="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                                ثقتك تبدأ من إطلالتك
+                            </h3>
+                            <p id="hero-subtext-preview" class="text-sm text-gray-300 leading-relaxed">
+                                اختر قماش ثوبك بعناية، بخامات واضحة وترشيحات تناسب استخدامك، من الدوام إلى المناسبات.
+                            </p>
+                            <div class="pt-2 flex flex-wrap gap-3">
+                                <button id="hero-btn-preview" class="px-6 py-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2">
+                                    تصفح الباقات والأقمشة <i class="fa-solid fa-arrow-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banner Specifications Checklist -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-gray-800/40 p-3 rounded-lg border border-gray-700">
+                            <span class="text-amber-400 font-bold block mb-1"><i class="fa-solid fa-mobile-screen"></i> التوافق مع الموبايل</span>
+                            ظهور العناصر بشكل ممتاز دون تغطية صورة الثوب.
+                        </div>
+                        <div class="bg-gray-800/40 p-3 rounded-lg border border-gray-700">
+                            <span class="text-amber-400 font-bold block mb-1"><i class="fa-solid fa-bullseye"></i> رسالة واحدة مركزة</span>
+                            عدم تشتيت العميل بكلمات الخصم في البانر الأول.
+                        </div>
+                        <div class="bg-gray-800/40 p-3 rounded-lg border border-gray-700">
+                            <span class="text-amber-400 font-bold block mb-1"><i class="fa-solid fa-bolt"></i> سرعة التحميل</span>
+                            استخدام صور وفيديوهات محسنة تضمن التحميل الفوري.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: CATEGORIES & BUNDLES -->
+            <div id="section-categories" class="tab-content space-y-6 hidden">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">03</span>
+                        إعادة تنظيم القائمة الرئيسية وقسم الباقات
+                    </h2>
+
+                    <!-- Main Navigation Modernized Structure -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-bold text-gray-400 mb-3">القائمة الرئيسية المقترحة (Navbar Structure)</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-amber-400 border border-amber-500/30 text-xs"><i class="fa-solid fa-sun ml-1"></i> 1. الأقمشة الصيفية</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-amber-400 border border-amber-500/30 text-xs"><i class="fa-solid fa-snowflake ml-1"></i> 2. الأقمشة الشتوية</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs"><i class="fa-solid fa-boxes-packing ml-1"></i> 3. الباقات</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs">4. العروض والتخفيضات</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs">5. اختر حسب الاستخدام</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs">6. ساعدني أختار</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs">7. الأكثر طلباً</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs">8. تواصل معنا</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Bundle Card Prototype -->
+                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="bg-amber-500/20 text-amber-400 text-xs px-2.5 py-1 rounded-full font-bold border border-amber-500/30">باقة موصى بها</span>
+                                <h3 id="bundle-title-preview" class="text-xl font-bold text-white mt-2">باقة 3 أثواب</h3>
+                                <p class="text-xs text-gray-400 mt-1">مناسبة لمن يريد تجهيز أكثر من ثوب للدوام أو الاستخدام اليومي</p>
+                            </div>
+                            <div class="text-left">
+                                <span class="text-xs text-gray-400 line-through block" id="bundle-old-price-preview">600 ر.س</span>
+                                <span class="text-2xl font-black text-amber-400" id="bundle-new-price-preview">399 ر.س</span>
+                            </div>
+                        </div>
+
+                        <!-- Bundle Details Breakdown -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-800/50 p-4 rounded-xl my-4 text-xs">
+                            <div>
+                                <span class="text-gray-400 block">التوفير:</span>
+                                <span class="font-bold text-emerald-400" id="bundle-save-preview">201 ر.س (33%)</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block">تكلفة القماش للثوب:</span>
+                                <span class="font-bold text-white" id="bundle-per-piece-preview">133 ر.س / ثوب</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block">عدد الأثواب:</span>
+                                <span class="font-bold text-white">3 أثواب كاملة</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block">الاستخدام:</span>
+                                <span class="font-bold text-amber-300">دوام + يومي</span>
+                            </div>
+                        </div>
+
+                        <button class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold hover:from-amber-400 hover:to-amber-500 transition-all text-sm shadow-md">
+                            اختر خامات الباقة وتأكيد الطلب
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: THE 4 PROPOSED OFFERS -->
+            <div id="section-offers" class="tab-content space-y-6 hidden">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">04</span>
+                        العروض الأربعة الرئيسية لعدم تشتيت العميل
+                    </h2>
+                    <p class="text-xs text-gray-400 mb-6">لكل عرض جمهور واضح ورسالة محددة لضمان أعلى نسبة تحويل</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Offer 1 -->
+                        <div class="bg-gray-800/80 p-5 rounded-2xl border border-gray-700 space-y-3 relative overflow-hidden">
+                            <div class="w-2 h-full bg-amber-500 absolute right-0 top-0"></div>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-white text-base">1. باقة الثوبين</h3>
+                                <span class="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">خصم 30%</span>
+                            </div>
+                            <p class="text-xs text-gray-300">مناسب للعميل الذي يريد ثوبين للدوام أو الاستخدام اليومي بسعر موفر.</p>
+                            <div class="text-xs bg-gray-900/60 p-2.5 rounded-lg text-gray-400">
+                                <strong class="text-amber-400">الرسالة:</strong> جهز ثوبين بخامات تناسب استخدامك واستفد من سعر الباقة بدل الشراء المنفرد.
+                            </div>
+                        </div>
+
+                        <!-- Offer 2 -->
+                        <div class="bg-gray-800/80 p-5 rounded-2xl border border-gray-700 space-y-3 relative overflow-hidden">
+                            <div class="w-2 h-full bg-emerald-500 absolute right-0 top-0"></div>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-white text-base">2. باقة 3 أثواب (العرض الرئيسي)</h3>
+                                <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">الأكثر مبيعاً</span>
+                            </div>
+                            <p class="text-xs text-gray-300">العرض الرئيسي لرفع متوسط قيمة الطلب (AOV).</p>
+                            <div class="text-xs bg-gray-900/60 p-2.5 rounded-lg text-gray-400">
+                                <strong class="text-emerald-400">الرسالة:</strong> ثلاثة أثواب لاستخدامات مختلفة (دوام، يومي، ومناسبة).
+                            </div>
+                        </div>
+
+                        <!-- Offer 3 -->
+                        <div class="bg-gray-800/80 p-5 rounded-2xl border border-gray-700 space-y-3 relative overflow-hidden">
+                            <div class="w-2 h-full bg-blue-500 absolute right-0 top-0"></div>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-white text-base">3. باقة الموسم (صيفي/شتوي)</h3>
+                                <span class="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">مرتبط بالموسم</span>
+                            </div>
+                            <p class="text-xs text-gray-300">خامات بوزن وملمس محددين يناسبان طقس الموسم الحالي.</p>
+                            <div class="text-xs bg-gray-900/60 p-2.5 rounded-lg text-gray-400">
+                                <strong class="text-blue-400">الرسالة:</strong> تشكيلة الموسم المخصصة للوقفة العملية والاستخدام المسائي.
+                            </div>
+                        </div>
+
+                        <!-- Offer 4 -->
+                        <div class="bg-gray-800/80 p-5 rounded-2xl border border-gray-700 space-y-3 relative overflow-hidden">
+                            <div class="w-2 h-full bg-purple-500 absolute right-0 top-0"></div>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-white text-base">4. باقة الاختيار السهل</h3>
+                                <span class="text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">حصر الخيارات</span>
+                            </div>
+                            <p class="text-xs text-gray-300">مخصصة للعميل المحتار، تضم 3 خامات مختارة وموضحة الفرق.</p>
+                            <div class="text-xs bg-gray-900/60 p-2.5 rounded-lg text-gray-400">
+                                <strong class="text-purple-400">الرسالة:</strong> اختار بدون حيرة، 3 خامات بشرح الملمس والفرق والتطبيقات.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: NEW PRODUCT PAGE TEMPLATE -->
+            <div id="section-product-page" class="tab-content space-y-6 hidden">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">05</span>
+                        قالب صفحة المنتج المستقلة (Landing Page Style)
+                    </h2>
+                    <p class="text-xs text-gray-400 mb-6">لأن زائر الإعلانات يربط مستقبله بصفحة المنتج مباشرة دون المرور بالرئيسية</p>
+
+                    <!-- Interactive Product Page Demo Structure -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 md:p-6 space-y-6">
+                        
+                        <!-- Top Media & Specs -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Left: Video & Image Gallery Mock -->
+                            <div class="space-y-3">
+                                <div class="relative bg-slate-800 rounded-xl h-56 flex items-center justify-center border border-gray-700 overflow-hidden group">
+                                    <div class="text-center p-4">
+                                        <i class="fa-solid fa-circle-play text-4xl text-amber-400 mb-2 group-hover:scale-110 transition-transform cursor-pointer"></i>
+                                        <p class="text-xs font-semibold text-gray-200">فيديو القماش الحقيقي (15 ثانية)</p>
+                                        <p class="text-[10px] text-gray-400 mt-1">يد تمر على الخامة + حركة الانسيابية + الماكرو</p>
+                                    </div>
+                                    <span class="absolute bottom-2 right-2 bg-black/60 px-2 py-0.5 rounded text-[10px] text-amber-300">HD 4K</span>
+                                </div>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <div class="bg-gray-800 p-2 text-center rounded-lg text-[10px] text-gray-400 border border-amber-500/40">شكل الثوب</div>
+                                    <div class="bg-gray-800 p-2 text-center rounded-lg text-[10px] text-gray-400">على الرول</div>
+                                    <div class="bg-gray-800 p-2 text-center rounded-lg text-[10px] text-gray-400">ماكرو الخيوط</div>
+                                    <div class="bg-gray-800 p-2 text-center rounded-lg text-[10px] text-gray-400">التغليف</div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Product Details -->
+                            <div class="space-y-4">
+                                <span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20">صيفي - كلاسيك</span>
+                                <h3 class="text-xl font-bold text-white">قماش كلاسيك هادئ - مناسب للدوام والاستخدام اليومي</h3>
+                                
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl font-extrabold text-amber-400">180 ر.س</span>
+                                    <span class="text-xs text-gray-400 line-through">250 ر.س</span>
+                                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">توفير 70 ر.س</span>
+                                </div>
+
+                                <p class="text-xs text-gray-300 leading-relaxed bg-gray-800/40 p-3 rounded-lg border border-gray-700/50">
+                                    خامة كلاسيكية صافية وخالية من اللمعان، تمنحك مظهراً هادئاً ومرتباً يناسب الاستخدام اليومي والعملي. وزن متوسط وملمس ناعم.
+                                </p>
+
+                                <!-- Specs Grid -->
+                                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                                    <div class="bg-gray-800 p-2 rounded"><span class="text-gray-400">الطول:</span> 3.5 متر (ثوب واحد)</div>
+                                    <div class="bg-gray-800 p-2 rounded"><span class="text-gray-400">العرض:</span> 58 إنش (عرضين)</div>
+                                    <div class="bg-gray-800 p-2 rounded"><span class="text-gray-400">التركيب:</span> بوليستر + فسكوز</div>
+                                    <div class="bg-gray-800 p-2 rounded"><span class="text-gray-400">الوقفة:</span> متوسطة منسدلة</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mandatory Trust Sections (Suitable For & Not Suitable For) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-800 pt-4">
+                            <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-xl">
+                                <h4 class="text-xs font-bold text-emerald-400 mb-2 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-check"></i> مناسبة لـ:
+                                </h4>
+                                <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside">
+                                    <li>الدوام والعمل اليومي الطويل.</li>
+                                    <li>الاجتماعات والمشاوير الرسمية الهادئة.</li>
+                                    <li>من يفضل الخامات قليلة التجعد وسهلة الكي.</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-rose-950/20 border border-rose-500/30 p-4 rounded-xl">
+                                <h4 class="text-xs font-bold text-rose-400 mb-2 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-xmark"></i> قد لا تناسبك إذا كنت تبحث عن:
+                                </h4>
+                                <ul class="text-xs text-gray-300 space-y-1 list-disc list-inside">
+                                    <li>لمعة واضحة وقوية.</li>
+                                    <li>وزن شتوي ثقيل جداً.</li>
+                                    <li>وقفة شديدة الصلابة (واقف تماماً).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: TRUST ELEMENTS & FAQ -->
+            <div id="section-trust" class="tab-content space-y-6 hidden">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">06</span>
+                        عناصر الثقة والأسئلة الشائعة (FAQ)
+                    </h2>
+
+                    <!-- Trust Bar Preview -->
+                    <div class="mb-6">
+                        <h3 class="text-xs font-bold text-gray-400 mb-2">شريط الثقة المقترح تحت البانر الرئيسي:</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="bg-gray-800 p-3 rounded-xl border border-gray-700 text-center">
+                                <i class="fa-solid fa-award text-amber-400 text-lg mb-1"></i>
+                                <div class="text-xs font-bold text-white">خبرة +20 سنة</div>
+                                <div class="text-[10px] text-gray-400">في الأقمشة الرجالية</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-xl border border-gray-700 text-center">
+                                <i class="fa-solid fa-clipboard-check text-amber-400 text-lg mb-1"></i>
+                                <div class="text-xs font-bold text-white">مواصفات دقيقة</div>
+                                <div class="text-[10px] text-gray-400">شرح الشفافية والوزن</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-xl border border-gray-700 text-center">
+                                <i class="fa-solid fa-headset text-amber-400 text-lg mb-1"></i>
+                                <div class="text-xs font-bold text-white">مساعدة قبل الشراء</div>
+                                <div class="text-[10px] text-gray-400">مستشار أقمشة متخصص</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-xl border border-gray-700 text-center">
+                                <i class="fa-solid fa-truck-fast text-amber-400 text-lg mb-1"></i>
+                                <div class="text-xs font-bold text-white">استبدال ومرونة</div>
+                                <div class="text-[10px] text-gray-400">سياسة واضحة وسهلة</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion FAQ Preview -->
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold text-gray-400 mb-2">قسم الأسئلة الشائعة المقترح (FAQ Accordion):</h3>
+                        <div class="bg-gray-800/60 rounded-xl p-3 border border-gray-700">
+                            <div class="font-bold text-xs text-white flex justify-between items-center cursor-pointer">
+                                <span>كم متر أحتاج لتفصيل ثوب رجالي؟</span>
+                                <i class="fa-solid fa-chevron-down text-amber-400 text-xs"></i>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-2">القطعة المتوفرة بطول 3.5 متر بعرضين (58 إنش) وتكفي لتفصيل ثوب واحد لشخص بالغ حتى وزن 100 كجم.</p>
+                        </div>
+                        <div class="bg-gray-800/60 rounded-xl p-3 border border-gray-700">
+                            <div class="font-bold text-xs text-white flex justify-between items-center cursor-pointer">
+                                <span>هل يمكن تغيير اللون أو الخامة داخل الباقة؟</span>
+                                <i class="fa-solid fa-chevron-down text-amber-400 text-xs"></i>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-2">نعم، يتيح المتجر اختيار الألوان والخامات المفضلة لكل ثوب في الباقة بكل سهولة.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 7: LAYOUT & PRIORITIES -->
+            <div id="section-layout" class="tab-content space-y-6 hidden">
+                <div class="glass-panel p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">07</span>
+                        الأولويات التنفيذية وترتيب الصفحة الرئيسية
+                    </h2>
+
+                    <!-- Execution Priorities Chart -->
+                    <div class="h-64 w-full mb-6">
+                        <canvas id="prioritiesChart"></canvas>
+                    </div>
+
+                    <!-- Priority List Steps -->
+                    <div class="space-y-3 text-xs">
+                        <div class="flex items-start gap-3 p-3 bg-red-950/20 border border-red-500/30 rounded-xl">
+                            <span class="px-2 py-0.5 rounded bg-red-500 text-white font-bold text-[10px]">أولوية 1</span>
+                            <div>
+                                <strong class="text-white block">قبل إطلاق الإعلانات (إجباري):</strong>
+                                <span class="text-gray-300">اعتماد الرسالة والبانر، تجميع صفحات المنتجات، إقرار أسعار الباقات الـ4، التأكد من سلة الشراء والدفع والتتبع (Pixel & Conversion API).</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-3 bg-amber-950/20 border border-amber-500/30 rounded-xl">
+                            <span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold text-[10px]">أولوية 2</span>
+                            <div>
+                                <strong class="text-white block">قبل التوسع في الإنفاق الإعلاني:</strong>
+                                <span class="text-gray-300">إضافة أداة "ساعدني أختار"، تفعيل أداة المقارنة، تحسين التوصيات داخل السلة، زيادة آراء ومراجعات العملاء.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-3 bg-blue-950/20 border border-blue-500/30 rounded-xl">
+                            <span class="px-2 py-0.5 rounded bg-blue-500 text-white font-bold text-[10px]">أولوية 3</span>
+                            <div>
+                                <strong class="text-white block">تحسين مستمر (A/B Testing):</strong>
+                                <span class="text-gray-300">اختبار أكثر من صورة للبانر، تجربة أسماء باقات مختلفة، تحسين أزرار اتخاذ القرار (CTA).</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RIGHT SIDEBAR (Live Mobile Simulator & Live Editor Control Panel) -->
+        <aside class="lg:col-span-4 space-y-6">
+
+            <!-- MOBILE SIMULATOR PREVIEW -->
+            <div id="mobile-simulator" class="glass-panel p-4 rounded-2xl sticky top-20">
+                <div class="flex items-center justify-between mb-3 px-2">
+                    <span class="text-xs font-bold text-gray-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-mobile-screen-button text-amber-400"></i> معاينة تجربة العميل (Mobile View)
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">تفاعلي</span>
+                </div>
+
+                <!-- Phone Frame Container -->
+                <div class="phone-frame bg-slate-950 overflow-hidden text-white flex flex-col h-[520px] relative">
+                    
+                    <!-- Phone Notch / Header -->
+                    <div class="bg-gray-900 px-4 py-2 flex justify-between items-center text-[10px] text-gray-400 border-b border-gray-800">
+                        <span>9:41</span>
+                        <div class="font-bold text-amber-400">هلا تكس - HALA TEX</div>
+                        <div class="flex gap-1"><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>
+                    </div>
+
+                    <!-- Phone Screen Content (Dynamic) -->
+                    <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar text-[11px]" id="simulated-mobile-body">
+                        
+                        <!-- Top Mobile Banner -->
+                        <div class="bg-gradient-to-r from-amber-600 to-amber-700 p-3 rounded-xl text-center shadow">
+                            <h4 id="sim-hero-title" class="font-bold text-white text-xs">ثقتك تبدأ من إطلالتك</h4>
+                            <p class="text-[9px] text-amber-100 mt-1">اختر قماش ثوبك بعناية بخامات واضحة وترشيحات مناسبة</p>
+                            <button id="sim-hero-btn" class="mt-2 px-3 py-1 bg-slate-900 text-amber-400 rounded-lg text-[9px] font-bold">تسوق الباقات الآن</button>
+                        </div>
+
+                        <!-- Mobile Categories Pill Slider -->
+                        <div class="flex gap-1.5 overflow-x-auto pb-1 text-[9px]">
+                            <span class="bg-amber-500 text-slate-950 px-2 py-1 rounded-md font-bold whitespace-nowrap">الباقات</span>
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded-md whitespace-nowrap">صيفي</span>
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded-md whitespace-nowrap">شتوي</span>
+                            <span class="bg-gray-800 text-gray-300 px-2 py-1 rounded-md whitespace-nowrap">ساعدني أختار</span>
+                        </div>
+
+                        <!-- Mobile Bundle Feature Card -->
+                        <div class="bg-gray-900 border border-gray-800 p-2.5 rounded-xl space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-white text-[11px]" id="sim-bundle-title">باقة 3 أثواب</span>
+                                <span class="text-amber-400 font-extrabold text-xs" id="sim-bundle-price">399 ر.س</span>
+                            </div>
+                            <p class="text-[9px] text-gray-400">تكلفة الثوب الواحد: <span id="sim-per-piece" class="text-emerald-400 font-bold">133 ر.س</span> فقط</p>
+                            <button class="w-full py-1.5 bg-amber-500 text-slate-950 rounded-lg font-bold text-[10px]">طلب الباقة بخصم 33%</button>
+                        </div>
+
+                        <!-- Mobile Trust Badges -->
+                        <div class="grid grid-cols-2 gap-1.5 text-[9px]">
+                            <div class="bg-gray-900 p-1.5 rounded border border-gray-800 text-center">
+                                <i class="fa-solid fa-shield text-amber-400"></i> ضمان الاستبدال
+                            </div>
+                            <div class="bg-gray-900 p-1.5 rounded border border-gray-800 text-center">
+                                <i class="fa-solid fa-truck text-amber-400"></i> شحن سريع
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Phone Navigation Footer -->
+                    <div class="bg-gray-900 px-4 py-2 flex justify-around text-gray-400 text-[14px] border-t border-gray-800">
+                        <i class="fa-solid fa-house text-amber-400"></i>
+                        <i class="fa-solid fa-layer-group"></i>
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EDITOR CONTROLS PANEL (Visible in Editor Mode) -->
+            <div id="editor-controls" class="glass-panel p-5 rounded-2xl hidden space-y-4">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-amber-400"></i> لوحة تعديل النصوص والأرقام
+                    </h3>
+                    <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">تعديل مباشر</span>
+                </div>
+
+                <!-- Input Field 1: Hero Title -->
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">عنوان البانر الرئيسي</label>
+                    <input type="text" id="input-hero-heading" value="ثقتك تبدأ من إطلالتك" oninput="updateLiveContent()" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:border-amber-500 outline-none">
+                </div>
+
+                <!-- Input Field 2: Hero Subtext -->
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">الوصف الفرعي للبانر</label>
+                    <textarea id="input-hero-subtext" rows="2" oninput="updateLiveContent()" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:border-amber-500 outline-none">اختر قماش ثوبك بعناية، بخامات واضحة وترشيحات تناسب استخدامك، من الدوام إلى المناسبات.</textarea>
+                </div>
+
+                <!-- Input Field 3: Bundle Price & Name -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">اسم الباقة الرئيسية</label>
+                        <input type="text" id="input-bundle-title" value="باقة 3 أثواب" oninput="updateLiveContent()" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">السعر بعد الخصم (ر.س)</label>
+                        <input type="number" id="input-bundle-price" value="399" oninput="updateLiveContent()" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Code Snippet Output Box -->
+                <div class="pt-3 border-t border-gray-800">
+                    <label class="text-xs font-bold text-amber-400 block mb-1"><i class="fa-solid fa-code"></i> كود التعديلات المولّد (HTML/JSON)</label>
+                    <pre id="code-output" class="bg-gray-950 p-3 rounded-lg text-[10px] text-gray-300 font-mono overflow-x-auto max-h-36 custom-scrollbar border border-gray-800"></pre>
+                    <button onclick="copyCode()" class="mt-2 w-full py-1.5 bg-gray-800 hover:bg-gray-700 text-xs text-gray-200 font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> نسخ كود التكوين
+                    </button>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-gray-800 py-4 px-6 text-center text-xs text-gray-400 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <span>© 2026 خطة تعديل متجر هلا تكس المعتمدة للحملات الإعلانية.</span>
+            <span class="text-amber-400 font-semibold"><i class="fa-solid fa-rocket ml-1"></i> جاهز للاستعراض أمام العميل</span>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC & INTERACTIVITY -->
+    <script>
+        // Tab Navigation State & Switching
+        function switchTab(tabId) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Remove active style from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-nav'));
+
+            // Show selected tab content
+            const selectedContent = document.getElementById(`section-${tabId}`);
+            if (selectedContent) selectedContent.classList.remove('hidden');
+
+            // Highlight selected nav button
+            const selectedBtn = document.getElementById(`tab-${tabId}`);
+            if (selectedBtn) selectedBtn.classList.add('active-nav');
+        }
+
+        // Mode Switching: Client Presentation vs Editor Mode
+        function setMode(mode) {
+            const presBtn = document.getElementById('view-presentation-btn');
+            const edBtn = document.getElementById('view-editor-btn');
+            const editorControls = document.getElementById('editor-controls');
+
+            if (mode === 'presentation') {
+                presBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow";
+                edBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-gray-400 hover:text-white";
+                editorControls.classList.add('hidden');
+            } else {
+                edBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow";
+                presBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-gray-400 hover:text-white";
+                editorControls.classList.remove('hidden');
+            }
+        }
+
+        // Live Editor Updates Logic (Reflects across UI and Mobile Simulator)
+        function updateLiveContent() {
+            const heroTitle = document.getElementById('input-hero-heading').value;
+            const heroSubtext = document.getElementById('input-hero-subtext').value;
+            const bundleTitle = document.getElementById('input-bundle-title').value;
+            const bundlePrice = parseFloat(document.getElementById('input-bundle-price').value) || 0;
+
+            // Main Preview Updates
+            document.getElementById('hero-heading-preview').innerText = heroTitle;
+            document.getElementById('hero-subtext-preview').innerText = heroSubtext;
+            document.getElementById('bundle-title-preview').innerText = bundleTitle;
+            document.getElementById('bundle-new-price-preview').innerText = bundlePrice + ' ر.س';
+
+            const perPiecePrice = Math.round(bundlePrice / 3);
+            document.getElementById('bundle-per-piece-preview').innerText = perPiecePrice + ' ر.س / ثوب';
+
+            // Mobile Simulator Updates
+            document.getElementById('sim-hero-title').innerText = heroTitle;
+            document.getElementById('sim-bundle-title').innerText = bundleTitle;
+            document.getElementById('sim-bundle-price').innerText = bundlePrice + ' ر.س';
+            document.getElementById('sim-per-piece').innerText = perPiecePrice + ' ر.س';
+
+            // Generate JSON Code Output for developers/clients
+            const codeOutput = {
+                store: "Hala Tex",
+                banner: {
+                    heading: heroTitle,
+                    subtext: heroSubtext
+                },
+                mainOffer: {
+                    title: bundleTitle,
+                    price: bundlePrice,
+                    perFabricCost: perPiecePrice
+                }
+            };
+            document.getElementById('code-output').innerText = JSON.stringify(codeOutput, null, 2);
+        }
+
+        // Copy Code Functionality
+        function copyCode() {
+            const codeText = document.getElementById('code-output').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = codeText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Temporary feedback alert replacement inside UI
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> تم النسخ بنجاح!`;
+            setTimeout(() => btn.innerHTML = originalText, 2000);
+        }
+
+        // Render Chart.js Visualizations
+        window.onload = function() {
+            // Initializing content state
+            updateLiveContent();
+
+            // 1. Conversion Rate Impact Chart
+            const ctxConv = document.getElementById('conversionChart').getContext('2d');
+            new Chart(ctxConv, {
+                type: 'bar',
+                data: {
+                    labels: ['قبل التعديل (كتالوج عادي)', 'بعد تعديل المتجر والباقات'],
+                    datasets: [{
+                        label: 'معدل التحويل المتوقع (%)',
+                        data: [1.2, 3.8],
+                        backgroundColor: ['rgba(239, 68, 68, 0.6)', 'rgba(212, 175, 55, 0.8)'],
+                        borderColor: ['#EF4444', '#D4AF37'],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#F3F4F6', font: { family: 'Cairo' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 2. Execution Priorities Donut Chart
+            const ctxPrio = document.getElementById('prioritiesChart').getContext('2d');
+            new Chart(ctxPrio, {
+                type: 'doughnut',
+                data: {
+                    labels: ['أولوية 1: قبل الإعلانات (أساسي)', 'أولوية 2: قبل التوسع', 'أولوية 3: تحسين مستمر'],
+                    datasets: [{
+                        data: [60, 25, 15],
+                        backgroundColor: ['#EF4444', '#F59E0B', '#3B82F6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#F3F4F6', font: { family: 'Cairo', size: 11 } }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
